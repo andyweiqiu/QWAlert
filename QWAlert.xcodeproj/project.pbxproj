@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D61F6D8D1EFA182E00DF71A8 /* UIApplication+window.m in Sources */ = {isa = PBXBuildFile; fileRef = D61F6D8C1EFA182E00DF71A8 /* UIApplication+window.m */; };
-		D61F6D901EFA18F300DF71A8 /* UILabel+Spacing.m in Sources */ = {isa = PBXBuildFile; fileRef = D61F6D8F1EFA18F300DF71A8 /* UILabel+Spacing.m */; };
+		D61F6D971EFA57D600DF71A8 /* UILabel+QWSpacing.m in Sources */ = {isa = PBXBuildFile; fileRef = D61F6D961EFA57D600DF71A8 /* UILabel+QWSpacing.m */; };
+		D61F6D9A1EFA582A00DF71A8 /* UIApplication+QWWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = D61F6D991EFA582A00DF71A8 /* UIApplication+QWWindow.m */; };
 		D656EBF01EF7BCF800752445 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D656EBEF1EF7BCF800752445 /* main.m */; };
 		D656EBF31EF7BCF800752445 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D656EBF21EF7BCF800752445 /* AppDelegate.m */; };
 		D656EBF61EF7BCF800752445 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D656EBF51EF7BCF800752445 /* ViewController.m */; };
@@ -39,10 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D61F6D8B1EFA182E00DF71A8 /* UIApplication+window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+window.h"; sourceTree = "<group>"; };
-		D61F6D8C1EFA182E00DF71A8 /* UIApplication+window.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+window.m"; sourceTree = "<group>"; };
-		D61F6D8E1EFA18F300DF71A8 /* UILabel+Spacing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Spacing.h"; sourceTree = "<group>"; };
-		D61F6D8F1EFA18F300DF71A8 /* UILabel+Spacing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Spacing.m"; sourceTree = "<group>"; };
+		D61F6D951EFA57D600DF71A8 /* UILabel+QWSpacing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+QWSpacing.h"; sourceTree = "<group>"; };
+		D61F6D961EFA57D600DF71A8 /* UILabel+QWSpacing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+QWSpacing.m"; sourceTree = "<group>"; };
+		D61F6D981EFA582A00DF71A8 /* UIApplication+QWWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+QWWindow.h"; sourceTree = "<group>"; };
+		D61F6D991EFA582A00DF71A8 /* UIApplication+QWWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+QWWindow.m"; sourceTree = "<group>"; };
 		D656EBEB1EF7BCF800752445 /* QWAlert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QWAlert.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D656EBEF1EF7BCF800752445 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D656EBF11EF7BCF800752445 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -126,10 +126,10 @@
 				D656EC221EF7BD1B00752445 /* QWAlertView.m */,
 				D697B9EF1EF8FB5C00A2CDD9 /* QWAlertConst.h */,
 				D697B9F01EF8FB5C00A2CDD9 /* QWAlertConst.m */,
-				D61F6D8B1EFA182E00DF71A8 /* UIApplication+window.h */,
-				D61F6D8C1EFA182E00DF71A8 /* UIApplication+window.m */,
-				D61F6D8E1EFA18F300DF71A8 /* UILabel+Spacing.h */,
-				D61F6D8F1EFA18F300DF71A8 /* UILabel+Spacing.m */,
+				D61F6D951EFA57D600DF71A8 /* UILabel+QWSpacing.h */,
+				D61F6D961EFA57D600DF71A8 /* UILabel+QWSpacing.m */,
+				D61F6D981EFA582A00DF71A8 /* UIApplication+QWWindow.h */,
+				D61F6D991EFA582A00DF71A8 /* UIApplication+QWWindow.m */,
 			);
 			path = QWAlert;
 			sourceTree = "<group>";
@@ -294,10 +294,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D61F6D901EFA18F300DF71A8 /* UILabel+Spacing.m in Sources */,
+				D61F6D9A1EFA582A00DF71A8 /* UIApplication+QWWindow.m in Sources */,
 				D656EBF61EF7BCF800752445 /* ViewController.m in Sources */,
 				D656EBF31EF7BCF800752445 /* AppDelegate.m in Sources */,
-				D61F6D8D1EFA182E00DF71A8 /* UIApplication+window.m in Sources */,
+				D61F6D971EFA57D600DF71A8 /* UILabel+QWSpacing.m in Sources */,
 				D697B9F11EF8FB5C00A2CDD9 /* QWAlertConst.m in Sources */,
 				D656EBF01EF7BCF800752445 /* main.m in Sources */,
 				D656EC231EF7BD1B00752445 /* QWAlertView.m in Sources */,

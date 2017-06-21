@@ -2,8 +2,8 @@
 //  AppDelegate.m
 //  QWAlert
 //
-//  Created by XMQ on 2017/6/19.
-//  Copyright © 2017年 XMQ. All rights reserved.
+//  Created by QW on 2017/6/19.
+//  Copyright © 2017年 邱威. All rights reserved.
 //
 
 #import "AppDelegate.h"

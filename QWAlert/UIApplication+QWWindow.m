@@ -1,14 +1,14 @@
 //
-//  UIApplication+window.m
+//  UIApplication+QWWindow.m
 //  QWAlert
 //
-//  Created by XMQ on 2017/6/21.
-//  Copyright © 2017年 XMQ. All rights reserved.
+//  Created by QW on 2017/6/21.
+//  Copyright © 2017年 邱威. All rights reserved.
 //
 
-#import "UIApplication+window.h"
+#import "UIApplication+QWWindow.h"
 
-@implementation UIApplication (window)
+@implementation UIApplication (QWWindow)
 
 + (UIWindow*)mainWindow {
     id appDelegate  = [UIApplication sharedApplication].delegate;

@@ -2,8 +2,8 @@
 //  QWAlertConst.m
 //  QWAlert
 //
-//  Created by XMQ on 2017/6/20.
-//  Copyright © 2017年 XMQ. All rights reserved.
+//  Created by QW on 2017/6/20.
+//  Copyright © 2017年 邱威. All rights reserved.
 //
 
 #import "QWAlertConst.h"

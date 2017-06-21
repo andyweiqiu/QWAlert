@@ -1,14 +1,14 @@
 //
-//  UILabel+Spacing.m
+//  UILabel+QWSpacing.m
 //  QWAlert
 //
-//  Created by XMQ on 2017/6/21.
-//  Copyright © 2017年 XMQ. All rights reserved.
+//  Created by QW on 2017/6/21.
+//  Copyright © 2017年 邱威. All rights reserved.
 //
 
-#import "UILabel+Spacing.h"
+#import "UILabel+QWSpacing.h"
 
-@implementation UILabel (Spacing)
+@implementation UILabel (QWSpacing)
 
 - (void)setLineSpacing:(CGFloat)lineSpacing kernSpacing:(CGFloat)kernSpacing value:(NSString*)value font:(UIFont*)font {
     NSMutableParagraphStyle *paraStyle = [[NSMutableParagraphStyle alloc] init];
@@ -35,5 +35,6 @@
     CGSize size = [self.text boundingRectWithSize:CGSizeMake(frameWidth, CGFLOAT_MAX) options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin |NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName: self.font, NSParagraphStyleAttributeName: style} context:nil].size;
     return size.height;
 }
+
 
 @end

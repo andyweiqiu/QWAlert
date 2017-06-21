@@ -7,8 +7,8 @@
 //
 
 #import "QWAlertView.h"
-#import "UIApplication+window.h"
-#import "UILabel+Spacing.h"
+#import "UIApplication+QWWindow.h"
+#import "UILabel+QWSpacing.h"
 #import "QWAlertConst.h"
 
 #define bottomButtonTag  1000
@@ -20,16 +20,12 @@
 
 /** 弹出框 */
 @property (nonatomic, strong) UIView *mainView;
-
 /** 标题 */
 @property (nonatomic, strong) UILabel *titleLabel;
-
 /** 分割线 */
 @property (nonatomic, strong) UIView *line;
-
 /** 内容 */
 @property (nonatomic, strong) UILabel *contentLabel;
-
 /** 底部按钮容器 */
 @property (nonatomic, strong) UIView *bottomView;
 
@@ -53,6 +49,10 @@
     return self;
 }
 
+- (void)dealloc {
+    
+}
+
 - (void)setup {
     self.backgroundColor = QWAlertCoverBackgroundColor;
     
@@ -62,29 +62,6 @@
     [self.mainView addSubview:self.line];
     [self.mainView addSubview:self.contentLabel];
     [self.mainView addSubview:self.bottomView];
-}
-
-- (void)setupBottomButton {
-    CGFloat width = (self.bottomView.frame.size.width-(_bottomButtonTitles.count-1)*QWAlertBottomButtonHorizontalSpacing)/_bottomButtonTitles.count;
-    CGFloat x = 0;
-    CGFloat y = 0;
-    
-    for (int i=0; i<_bottomButtonTitles.count; i++) {
-        x = (width+QWAlertBottomButtonHorizontalSpacing)*i;
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(x, y, width, QWAlertBottomButtonHeight);
-        button.backgroundColor = QWAlertBottomButtonBackgroundColor;
-        
-        [button setTitle:_bottomButtonTitles[i] forState:0];
-        button.titleLabel.font = QWAlertBottomButtonLabelFont;
-        
-        button.layer.cornerRadius = QWAlertBottomButtonCornerRadius;
-        button.layer.masksToBounds = YES;
-        button.tag = i+bottomButtonTag;
-        [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        
-        [self.bottomView addSubview:button];
-    }
 }
 
 - (void)setupFrame {
@@ -118,9 +95,33 @@
     
 }
 
+- (void)setupBottomButton {
+    CGFloat width = (self.bottomView.frame.size.width-(_bottomButtonTitles.count-1)*QWAlertBottomButtonHorizontalSpacing)/_bottomButtonTitles.count;
+    CGFloat x = 0;
+    CGFloat y = 0;
+    
+    for (int i=0; i<_bottomButtonTitles.count; i++) {
+        x = (width+QWAlertBottomButtonHorizontalSpacing)*i;
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = CGRectMake(x, y, width, QWAlertBottomButtonHeight);
+        button.backgroundColor = QWAlertBottomButtonBackgroundColor;
+        
+        [button setTitle:_bottomButtonTitles[i] forState:0];
+        button.titleLabel.font = QWAlertBottomButtonLabelFont;
+        
+        button.layer.cornerRadius = QWAlertBottomButtonCornerRadius;
+        button.layer.masksToBounds = YES;
+        button.tag = i+bottomButtonTag;
+        [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.bottomView addSubview:button];
+    }
+}
+
 - (void) show:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION {
     
     self.titleLabel.text = tip;
+    
     [self.contentLabel setLineSpacing:QWAlertContentLineSpacing kernSpacing:QWAlertContentKernSpacing value:message font:[UIFont systemFontOfSize:16.]];
     
     [self setupFrame];
@@ -148,11 +149,16 @@
 }
 
 - (void)buttonClicked:(UIButton *)button {
+    self.alpha = 0.0f;
+    [self removeFromSuperview];
     NSInteger index = button.tag - bottomButtonTag;
     if (_delegate && [_delegate respondsToSelector:@selector(alertView:clickedButtonAtIndex:)]) {
         [_delegate alertView:self clickedButtonAtIndex:index];
     }
 }
+
+#pragma mark -
+#pragma mark get - set
 
 - (UIView *)mainView {
     if (!_mainView) {
@@ -203,6 +209,51 @@
     }
     
     return _bottomView;
+}
+
+#pragma mark -
+
+- (void)setTitle:(NSString *)title {
+    _title = title;
+    
+    self.titleLabel.text = title;
+}
+
+- (void)setText:(NSString *)text{
+    _text = text;
+    
+    self.contentLabel.text = text;
+    [self setupFrame]; //需要重新布局
+}
+
+// - 字体大小
+- (void)setTitleFont:(UIFont *)titleFont {
+    _titleFont = titleFont;
+    
+    self.titleLabel.font = titleFont;
+}
+
+- (void)setTextFont:(UIFont *)textFont {
+    _textFont = textFont;
+    
+    self.contentLabel.font = textFont;
+}
+
+- (void)setButtonFont:(UIFont *)buttonFont {
+    _buttonFont = buttonFont;
+}
+
+// - 字体颜色
+- (void)setTitleColor:(UIColor *)titleColor {
+    _titleColor = titleColor;
+    
+    self.titleLabel.textColor = titleColor;
+}
+
+- (void)setTextColor:(UIColor *)textColor {
+    _textColor = textColor;
+    
+    self.contentLabel.textColor = textColor;
 }
 
 @end
