@@ -61,8 +61,12 @@
 /* 设置分割线的高度 默认高度 1.*/
 @property (nonatomic, assign) CGFloat lineHeight;
 
+//  使用该类方法只能显示默认弹出框，暂时不能自定义显示
++ (void)alertWithTitle:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;
 
-- (void) show:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;
+- (instancetype)initWithTitle:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION;
+
+- (void)show;
 
 @end
 

@@ -27,12 +27,12 @@
     self.attributedText = attributeStr;
 }
 
-- (CGFloat)getHeightWithFrameWidth:(CGFloat)frameWidth lineSpacing:(CGFloat)lineSpacing  {
+- (CGFloat)getHeightWithFrameWidth:(CGFloat)frameWidth lineSpacing:(CGFloat)lineSpacing kernSpacing:(CGFloat)kernSpacing  {
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     
     style.lineSpacing = lineSpacing;
     
-    CGSize size = [self.text boundingRectWithSize:CGSizeMake(frameWidth, CGFLOAT_MAX) options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin |NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName: self.font, NSParagraphStyleAttributeName: style} context:nil].size;
+    CGSize size = [self.text boundingRectWithSize:CGSizeMake(frameWidth, CGFLOAT_MAX) options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin |NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName: self.font, NSParagraphStyleAttributeName: style, NSKernAttributeName:@(kernSpacing)} context:nil].size;
     return size.height;
 }
 

@@ -27,9 +27,11 @@
 }
 
 - (IBAction)show:(id)sender {
-    QWAlertView *alert = [[QWAlertView alloc] init];
+    QWAlertView *alert = [[QWAlertView alloc] initWithTitle:@"提示" message:@"我有一只小毛驴，我从来也不骑，有一天我心血来潮骑着去赶集，我手里拿着小皮鞭，我心里很得意" otherButtonTitles:@"第一个", @"第二个", @"第三个", nil];
     alert.delegate = self;
-    [alert show:@"提示" message:@"我有一只小毛驴，我有一只小毛驴，我有一只小毛驴，我有一只小毛驴，我有一只小毛驴" otherButtonTitles:@"第一个", @"第二个", @"第三个", nil];
+    
+    [alert show];
+    
     alert.title = @"警告";
     
     alert.textColor = [UIColor purpleColor];
@@ -43,6 +45,8 @@
     alert.cornerRadius = 10.;
     
     alert.lineHeight = 3.;
+    
+//    [QWAlertView alertWithTitle:@"提示" message:@"有一天我心血来潮骑着去赶集，我手里拿着小皮鞭，我心里很得意，我有一只小毛驴，我从来也不骑" otherButtonTitles:@"第一个", @"第二个", @"第三个", nil];
 }
 
 - (void)alertView:(QWAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {

@@ -15,6 +15,12 @@
 
 @interface QWAlertView ()
 {
+    NSString *_tip;
+    NSString *_message;
+    va_list _argList;
+    
+    NSString *_otherButtonTitles;
+    
     NSArray *_bottomButtonTitles;
 }
 
@@ -46,6 +52,70 @@
     [self unregisterFromKVO];
 }
 
+- (instancetype) initWithTitle:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION {
+    if (self = [super init]) {
+        [self setup];
+        [self registerForKVO];
+        
+        va_list argList;
+        
+        va_start(argList, otherButtonTitles);
+        
+        [self show:tip message:message otherButtonTitles:otherButtonTitles parameters:argList];
+        
+        va_end(argList);
+    }
+    return self;
+}
+
++ (void) alertWithTitle:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION {
+    QWAlertView *alertView = [[self alloc] init];
+    
+    va_list argList;
+    
+    va_start(argList, otherButtonTitles);
+    
+    [alertView show:tip message:message otherButtonTitles:otherButtonTitles parameters:argList];
+    
+    va_end(argList);
+    
+    [alertView show];
+}
+
+- (void) show:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles parameters:(va_list)argList {
+    
+    _tip = tip;
+    _message = message;
+    _argList = argList;
+    _otherButtonTitles = otherButtonTitles;
+}
+
+/* 显示*/
+- (void)show {
+    self.titleLabel.text = _tip;
+    
+    [self.contentLabel setLineSpacing:QWAlertContentLineSpacing kernSpacing:QWAlertContentKernSpacing value:_message font:QWAlertLabelFont];
+    
+    [self setupFrame];
+    
+    NSMutableArray *otherButtonTitleArray = [[NSMutableArray alloc] init];
+    
+    [otherButtonTitleArray addObject:_otherButtonTitles];
+    
+    NSString *arg = nil;
+    
+    while ((arg = va_arg(_argList, NSString *)))
+    {
+        [otherButtonTitleArray addObject:arg];
+    }
+    
+    _bottomButtonTitles = [NSArray arrayWithArray:otherButtonTitleArray];
+    
+    [self setupBottomButton];
+    
+    [[UIApplication mainWindow] addSubview:self];
+}
+
 - (void)setup {
     _lineHeight = 1.;
     self.backgroundColor = QWAlertCoverBackgroundColor;
@@ -66,7 +136,7 @@
     CGFloat contentWidth = mainViewWidth - 2*QWAlertContentHorizontalOffset;
     
     //内容的文本高度
-    CGFloat textHeight = [self.contentLabel getHeightWithFrameWidth:contentWidth lineSpacing:QWAlertContentLineSpacing];
+    CGFloat textHeight = [self.contentLabel getHeightWithFrameWidth:contentWidth lineSpacing:QWAlertContentLineSpacing kernSpacing:QWAlertContentKernSpacing];
     
     CGFloat offset = 0; //相对一行文本的偏移量 (默认一行文本的高度为30.)
     if (textHeight > QWAlertContentDefaultHeight) {
@@ -110,35 +180,6 @@
     }
 }
 
-- (void) show:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION {
-    
-    self.titleLabel.text = tip;
-    
-    [self.contentLabel setLineSpacing:QWAlertContentLineSpacing kernSpacing:QWAlertContentKernSpacing value:message font:[UIFont systemFontOfSize:16.]];
-    
-    [self setupFrame];
-    
-    NSString *arg = nil;
-    
-    va_list argList;
-    
-    NSMutableArray *otherButtonTitleArray = [[NSMutableArray alloc] init];
-    
-    [otherButtonTitleArray addObject:otherButtonTitles];
-    
-    va_start(argList, otherButtonTitles);
-    while ((arg = va_arg(argList, NSString *)))
-    {
-        [otherButtonTitleArray addObject:arg];
-    }
-    va_end(argList);
-    
-    _bottomButtonTitles = [NSArray arrayWithArray:otherButtonTitleArray];
-    
-    [self setupBottomButton];
-    
-   [[UIApplication mainWindow] addSubview:self];
-}
 
 - (void)buttonClicked:(UIButton *)button {
     self.alpha = 0.0f;
