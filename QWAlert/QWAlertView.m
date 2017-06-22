@@ -36,24 +36,18 @@
 - (instancetype)init {
     if (self = [super init]) {
         [self setup];
-    }
-    
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        [self setup];
+        [self registerForKVO];
     }
     
     return self;
 }
 
 - (void)dealloc {
-    
+    [self unregisterFromKVO];
 }
 
 - (void)setup {
+    _lineHeight = 1.;
     self.backgroundColor = QWAlertCoverBackgroundColor;
     
     [self addSubview:self.mainView];
@@ -73,7 +67,6 @@
     
     //内容的文本高度
     CGFloat textHeight = [self.contentLabel getHeightWithFrameWidth:contentWidth lineSpacing:QWAlertContentLineSpacing];
-    NSLog(@"%f", textHeight);
     
     CGFloat offset = 0; //相对一行文本的偏移量 (默认一行文本的高度为30.)
     if (textHeight > QWAlertContentDefaultHeight) {
@@ -87,7 +80,7 @@
     
     self.titleLabel.frame = CGRectMake(QWAlertContentHorizontalOffset, 0, contentWidth, QWAlertHeaderHeight);
     
-    self.line.frame = CGRectMake(QWAlertContentHorizontalOffset, self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height, contentWidth, 1);
+    self.line.frame = CGRectMake(QWAlertContentHorizontalOffset, self.titleLabel.frame.origin.y+self.titleLabel.frame.size.height, contentWidth, self.lineHeight);
     
     self.contentLabel.frame = CGRectMake(QWAlertContentHorizontalOffset, self.line.frame.origin.y+self.line.frame.size.height+25, contentWidth, textHeight);
     
@@ -102,15 +95,14 @@
     
     for (int i=0; i<_bottomButtonTitles.count; i++) {
         x = (width+QWAlertBottomButtonHorizontalSpacing)*i;
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        BottomButton *button = [BottomButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake(x, y, width, QWAlertBottomButtonHeight);
         button.backgroundColor = QWAlertBottomButtonBackgroundColor;
         
-        [button setTitle:_bottomButtonTitles[i] forState:0];
-        button.titleLabel.font = QWAlertBottomButtonLabelFont;
+        [button setTitle:_bottomButtonTitles[i] forState:UIControlStateNormal];
+        button.font = QWAlertBottomButtonLabelFont;
         
-        button.layer.cornerRadius = QWAlertBottomButtonCornerRadius;
-        button.layer.masksToBounds = YES;
+        button.cornerRadius = QWAlertBottomButtonCornerRadius;
         button.tag = i+bottomButtonTag;
         [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -158,7 +150,7 @@
 }
 
 #pragma mark -
-#pragma mark get - set
+#pragma mark get
 
 - (UIView *)mainView {
     if (!_mainView) {
@@ -213,47 +205,146 @@
 
 #pragma mark -
 
-- (void)setTitle:(NSString *)title {
-    _title = title;
-    
-    self.titleLabel.text = title;
+#pragma mark - KVO
+
+- (void)registerForKVO {
+    for (NSString *keyPath in [self observableKeypaths]) {
+        [self addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:NULL];
+    }
 }
 
-- (void)setText:(NSString *)text{
-    _text = text;
-    
-    self.contentLabel.text = text;
-    [self setupFrame]; //需要重新布局
+- (void)unregisterFromKVO {
+    for (NSString *keyPath in [self observableKeypaths]) {
+        [self removeObserver:self forKeyPath:keyPath];
+    }
 }
 
-// - 字体大小
-- (void)setTitleFont:(UIFont *)titleFont {
-    _titleFont = titleFont;
-    
-    self.titleLabel.font = titleFont;
+- (NSArray *)observableKeypaths {
+    return [NSArray arrayWithObjects:@"title", @"text", @"titleFont", @"textFont", @"buttonFont", @"titleColor", @"textColor", @"buttonTextColor", @"buttonBackgroundColor", @"mainBackgroundColor", @"lineBackgroundColor", @"cornerRadius", @"buttonCornerRadius", @"lineHeight", nil];
 }
 
-- (void)setTextFont:(UIFont *)textFont {
-    _textFont = textFont;
-    
-    self.contentLabel.font = textFont;
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(updateUIForKeypath:) withObject:keyPath waitUntilDone:NO];
+    } else {
+        [self updateUIForKeypath:keyPath];
+    }
 }
 
-- (void)setButtonFont:(UIFont *)buttonFont {
-    _buttonFont = buttonFont;
+- (void)updateUIForKeypath:(NSString *)keyPath {
+    if ([keyPath isEqualToString:@"mainBackgroundColor"]) {
+        self.mainView.backgroundColor = self.mainBackgroundColor;
+    } else if ([keyPath isEqualToString:@"title"]) {
+        self.titleLabel.text = self.title;
+    } else if ([keyPath isEqualToString:@"titleFont"]) {
+        self.titleLabel.font = self.titleFont;
+    } else if ([keyPath isEqualToString:@"titleColor"]) {
+        self.titleLabel.textColor = self.titleColor;
+    } else if ([keyPath isEqualToString:@"text"]) {
+        self.contentLabel.text = self.text;
+        [self setupFrame];
+    }  else if ([keyPath isEqualToString:@"textFont"]) {
+        self.contentLabel.font = self.textFont;
+    }  else if ([keyPath isEqualToString:@"textColor"]) {
+        self.contentLabel.textColor = self.textColor;
+    } else if ([keyPath isEqualToString:@"lineBackgroundColor"]) {
+        self.line.backgroundColor = self.lineBackgroundColor;
+    } else if ([keyPath isEqualToString:@"cornerRadius"]) {
+        self.mainView.layer.cornerRadius = self.cornerRadius;
+        self.mainView.layer.masksToBounds = YES;
+    } else if ([keyPath isEqualToString:@"lineHeight"]) {
+        [self setupFrame];
+    } else if ([keyPath isEqualToString:@"buttonCornerRadius"]) {
+        for (UIView *sub in self.bottomView.subviews) {
+            if ([sub isKindOfClass:[BottomButton class]]) {
+                ((BottomButton *)sub).cornerRadius = self.buttonCornerRadius;
+            }
+        }
+    } else if ([keyPath isEqualToString:@"buttonFont"]) {
+        for (UIView *sub in self.bottomView.subviews) {
+            if ([sub isKindOfClass:[BottomButton class]]) {
+                ((BottomButton *)sub).font = self.buttonFont;
+            }
+        }
+    } else if ([keyPath isEqualToString:@"buttonTextColor"]) {
+        for (UIView *sub in self.bottomView.subviews) {
+            if ([sub isKindOfClass:[BottomButton class]]) {
+                ((BottomButton *)sub).textColor = self.buttonTextColor;
+            }
+        }
+    } else if ([keyPath isEqualToString:@"buttonBackgroundColor"]) {
+        for (UIView *sub in self.bottomView.subviews) {
+            if ([sub isKindOfClass:[BottomButton class]]) {
+                ((BottomButton *)sub).backgroundColor = self.buttonBackgroundColor;
+            }
+        }
+    }
+    
+    [self setNeedsLayout];
+    [self setNeedsDisplay];
 }
 
-// - 字体颜色
-- (void)setTitleColor:(UIColor *)titleColor {
-    _titleColor = titleColor;
+@end
+
+
+
+
+@interface BottomButton ()
+
+@end
+
+@implementation BottomButton
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self registerForKVO];
+    }
     
-    self.titleLabel.textColor = titleColor;
+    return self;
 }
 
-- (void)setTextColor:(UIColor *)textColor {
-    _textColor = textColor;
+- (void)dealloc {
+    [self unregisterFromKVO];
+}
+
+#pragma mark - KVO
+
+- (void)registerForKVO {
+    for (NSString *keyPath in [self observableKeypaths]) {
+        [self addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:NULL];
+    }
+}
+
+- (void)unregisterFromKVO {
+    for (NSString *keyPath in [self observableKeypaths]) {
+        [self removeObserver:self forKeyPath:keyPath];
+    }
+}
+
+- (NSArray *)observableKeypaths {
+    return [NSArray arrayWithObjects:@"font", @"textColor", @"cornerRadius", nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (![NSThread isMainThread]) {
+        [self performSelectorOnMainThread:@selector(updateUIForKeypath:) withObject:keyPath waitUntilDone:NO];
+    } else {
+        [self updateUIForKeypath:keyPath];
+    }
+}
+
+- (void)updateUIForKeypath:(NSString *)keyPath {
+    if ([keyPath isEqualToString:@"font"]) {
+        self.titleLabel.font = self.font;
+    } else if ([keyPath isEqualToString:@"textColor"]) {
+        [self setTitleColor:self.textColor forState:UIControlStateNormal];
+    } else if ([keyPath isEqualToString:@"cornerRadius"]) {
+        self.layer.cornerRadius = self.cornerRadius;
+        self.layer.masksToBounds = YES;
+    }
     
-    self.contentLabel.textColor = textColor;
+    [self setNeedsLayout];
+    [self setNeedsDisplay];
 }
 
 @end

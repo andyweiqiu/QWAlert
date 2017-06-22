@@ -30,6 +30,19 @@
     QWAlertView *alert = [[QWAlertView alloc] init];
     alert.delegate = self;
     [alert show:@"提示" message:@"我有一只小毛驴，我有一只小毛驴，我有一只小毛驴，我有一只小毛驴，我有一只小毛驴" otherButtonTitles:@"第一个", @"第二个", @"第三个", nil];
+    alert.title = @"警告";
+    
+    alert.textColor = [UIColor purpleColor];
+    
+    alert.buttonBackgroundColor = [UIColor blueColor];
+    
+    alert.mainBackgroundColor = [UIColor yellowColor];
+    
+    alert.lineBackgroundColor = [UIColor redColor];
+    
+    alert.cornerRadius = 10.;
+    
+    alert.lineHeight = 3.;
 }
 
 - (void)alertView:(QWAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
