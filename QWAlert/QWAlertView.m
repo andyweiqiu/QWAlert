@@ -10,14 +10,15 @@
 #import "UIApplication+QWWindow.h"
 #import "UILabel+QWSpacing.h"
 #import "QWAlertConst.h"
-
-#define bottomButtonTag  1000
+#import <objc/runtime.h>
 
 @interface QWAlertView ()
 {
     NSString *_tip;
     NSString *_message;
     va_list _argList;
+    
+    NSDictionary *_configuration;
     
     NSString *_otherButtonTitles;
     
@@ -52,7 +53,7 @@
     [self unregisterFromKVO];
 }
 
-- (instancetype) initWithTitle:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION {
+- (instancetype)initWithTitle:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION {
     if (self = [super init]) {
         [self setup];
         [self registerForKVO];
@@ -61,33 +62,49 @@
         
         va_start(argList, otherButtonTitles);
         
-        [self show:tip message:message otherButtonTitles:otherButtonTitles parameters:argList];
+        [self show:tip message:message configuration:nil otherButtonTitles:otherButtonTitles parameters:argList];
         
         va_end(argList);
     }
     return self;
 }
 
-+ (void) alertWithTitle:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION {
++ (void)alertWithTitle:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION {
     QWAlertView *alertView = [[self alloc] init];
     
     va_list argList;
     
     va_start(argList, otherButtonTitles);
     
-    [alertView show:tip message:message otherButtonTitles:otherButtonTitles parameters:argList];
+    [alertView show:tip message:message configuration:nil otherButtonTitles:otherButtonTitles parameters:argList];
     
     va_end(argList);
     
     [alertView show];
 }
 
-- (void) show:(NSString *)tip message:(NSString *)message otherButtonTitles:(NSString *)otherButtonTitles parameters:(va_list)argList {
++ (void)alertWithTitle:(NSString *)tip message:(NSString *)message configuration:(NSDictionary *)configuration otherButtonTitles:(NSString *)otherButtonTitles, ... NS_REQUIRES_NIL_TERMINATION {
+    QWAlertView *alertView = [[self alloc] init];
+    
+    va_list argList;
+    
+    va_start(argList, otherButtonTitles);
+    
+    [alertView show:tip message:message configuration:configuration otherButtonTitles:otherButtonTitles parameters:argList];
+    
+    va_end(argList);
+    
+    [alertView show];
+}
+
+- (void) show:(NSString *)tip message:(NSString *)message configuration:(NSDictionary *)configuration otherButtonTitles:(NSString *)otherButtonTitles parameters:(va_list)argList {
     
     _tip = tip;
     _message = message;
     _argList = argList;
     _otherButtonTitles = otherButtonTitles;
+    
+    [self setProperties];
 }
 
 /* 显示*/
@@ -114,6 +131,26 @@
     [self setupBottomButton];
     
     [[UIApplication mainWindow] addSubview:self];
+}
+
+- (void)setProperties {
+    
+    if (_configuration) {
+        
+        unsigned int outCount = 0;
+        objc_property_t *properties = class_copyPropertyList(self.class, &outCount);// 获得所有的成员变量
+        NSArray *allKeys = _configuration.allKeys;
+        
+        for (int i=0; i<outCount; i++) {
+            objc_property_t property = properties[i];
+            NSString *propertyName = @(property_getName(property));
+            for (NSString *key in allKeys) {
+                if ([propertyName isEqualToString:key]) {
+                    [self setValue:_configuration[key] forKey:propertyName];
+                }
+            }
+        }
+    }
 }
 
 - (void)setup {
@@ -191,7 +228,7 @@
 }
 
 #pragma mark -
-#pragma mark get
+#pragma mark Get
 
 - (UIView *)mainView {
     if (!_mainView) {
@@ -328,7 +365,7 @@
 @end
 
 
-
+#pragma mark -
 
 @interface BottomButton ()
 

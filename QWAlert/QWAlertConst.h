@@ -16,10 +16,14 @@
 
 #define QWAlertColor(r, g, b) [UIColor colorWithRed:(r)/255. green:(g)/255. blue:(b)/255. alpha:1.]
 
+#define bottomButtonTag  1000
+
 // 标题文本颜色
 #define QWAlertHeaderTextColor QWAlertColor(244, 177, 177)
+
 // 底部按钮背景颜色
 #define QWAlertBottomButtonBackgroundColor QWAlertColor(30, 45, 83)
+
 // 分割线颜色
 #define QWAlertLineColor QWAlertColor(200, 201, 201)
 

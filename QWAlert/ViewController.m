@@ -27,26 +27,28 @@
 }
 
 - (IBAction)show:(id)sender {
-    QWAlertView *alert = [[QWAlertView alloc] initWithTitle:@"提示" message:@"我有一只小毛驴，我从来也不骑，有一天我心血来潮骑着去赶集，我手里拿着小皮鞭，我心里很得意" otherButtonTitles:@"第一个", @"第二个", @"第三个", nil];
-    alert.delegate = self;
-    
-    [alert show];
-    
-    alert.title = @"警告";
-    
-    alert.textColor = [UIColor purpleColor];
-    
-    alert.buttonBackgroundColor = [UIColor blueColor];
-    
-    alert.mainBackgroundColor = [UIColor yellowColor];
-    
-    alert.lineBackgroundColor = [UIColor redColor];
-    
-    alert.cornerRadius = 10.;
-    
-    alert.lineHeight = 3.;
+//    QWAlertView *alert = [[QWAlertView alloc] initWithTitle:@"提示" message:@"我有一只小毛驴，我从来也不骑，有一天我心血来潮骑着去赶集，我手里拿着小皮鞭，我心里很得意" otherButtonTitles:@"第一个", @"第二个", @"第三个", nil];
+//    alert.delegate = self;
+//    
+//    [alert show];
+//    
+//    alert.title = @"警告";
+//    
+//    alert.textColor = [UIColor purpleColor];
+//    
+//    alert.buttonBackgroundColor = [UIColor blueColor];
+//    
+//    alert.mainBackgroundColor = [UIColor yellowColor];
+//    
+//    alert.lineBackgroundColor = [UIColor redColor];
+//    
+//    alert.cornerRadius = 10.;
+//    
+//    alert.lineHeight = 3.;
     
 //    [QWAlertView alertWithTitle:@"提示" message:@"有一天我心血来潮骑着去赶集，我手里拿着小皮鞭，我心里很得意，我有一只小毛驴，我从来也不骑" otherButtonTitles:@"第一个", @"第二个", @"第三个", nil];
+    
+    [QWAlertView alertWithTitle:@"呼哈" message:@"有一天我心血来潮骑着去赶集，我手里拿着小皮鞭，我心里很得意，我有一只小毛驴，我从来也不骑" configuration:@{@"titleColor": [UIColor redColor]} otherButtonTitles:@"确定", @"取消", nil];
 }
 
 - (void)alertView:(QWAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
